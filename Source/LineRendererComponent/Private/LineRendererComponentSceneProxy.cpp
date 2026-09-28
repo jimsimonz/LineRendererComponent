@@ -61,9 +61,6 @@ public:
     {
         // create dynamic buffer
 
-        // FRHIResourceCreateInfo CreateInfo(TEXT("ThickLines"), VertexData->GetResourceArray());
-        FRHIResourceCreateInfo CreateInfo(TEXT("ThickLines"));
-
         check (VertexData.IsValid());
 
         const uint32 SizeInBytes = NumVertices * sizeof(FVector3f) * 8 * 3;
@@ -71,13 +68,18 @@ public:
         check (SizeInBytes >= 0);
 
 #if ENGINE_MAJOR_VERSION > 4 && ENGINE_MINOR_VERSION > 2
-        VertexBufferRHI = RHICmdList.CreateVertexBuffer(SizeInBytes, EBufferUsageFlags::Dynamic | EBufferUsageFlags::ShaderResource, CreateInfo);
+        const FRHIBufferCreateDesc CreateDesc =
+            FRHIBufferCreateDesc::Create(TEXT("ThickLines"), SizeInBytes, 0, EBufferUsageFlags::Dynamic | EBufferUsageFlags::ShaderResource | EBufferUsageFlags::VertexBuffer)
+            .DetermineInitialState();
+
+        VertexBufferRHI = RHICmdList.CreateBuffer(CreateDesc);
         if (VertexBufferRHI)
         {
             PositionComponentSRV = RHICmdList.CreateShaderResourceView(FShaderResourceViewInitializer(VertexBufferRHI, PF_R32_FLOAT));
         }
-        
+
 #else
+        FRHIResourceCreateInfo CreateInfo(TEXT("ThickLines"));
         VertexBufferRHI = RHICreateVertexBuffer(SizeInBytes, BUF_Dynamic | BUF_ShaderResource, CreateInfo);
         if (VertexBufferRHI)
         {
