@@ -151,7 +151,7 @@ FMaterialRelevance ULineRendererComponent::GetMaterialRelevance(ERHIFeatureLevel
 {
     if (IsValid(LineMaterial))
     {
-        return LineMaterial->GetRelevance_Concurrent(InFeatureLevel);
+        return LineMaterial->GetRelevance_Concurrent(GetFeatureLevelShaderPlatform_Checked(InFeatureLevel));
     }
     return FMaterialRelevance();
 }

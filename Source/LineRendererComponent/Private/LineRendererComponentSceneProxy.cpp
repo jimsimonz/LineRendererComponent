@@ -249,10 +249,10 @@ void FLineRendererComponentSceneProxy::GetDynamicMeshElements(const TArray<const
 
                     float OrthoZoomFactor = 1.0f;
 
-                    const bool bIsPerspective = View->ViewMatrices.GetProjectionMatrix().M[3][3] < 1.0f ? true : false;
+                    const bool bIsPerspective = View->ViewMatrices.GetViewToClip().M[3][3] < 1.0f ? true : false;
                     if (!bIsPerspective)
                     {
-                        OrthoZoomFactor = 1.0f / View->ViewMatrices.GetProjectionMatrix().M[0][0];
+                        OrthoZoomFactor = 1.0f / View->ViewMatrices.GetViewToClip().M[0][0];
                     }
 
                     // Draw the mesh.
@@ -269,8 +269,8 @@ void FLineRendererComponentSceneProxy::GetDynamicMeshElements(const TArray<const
                         Mesh.bWireframe = true;
                     }
 
-                    const FMatrix& WorldToClip = View->ViewMatrices.GetViewProjectionMatrix();
-                    const FMatrix& ClipToWorld = View->ViewMatrices.GetInvViewProjectionMatrix();
+                    const FMatrix& WorldToClip = View->ViewMatrices.GetWorldToClip();
+                    const FMatrix& ClipToWorld = View->ViewMatrices.GetClipToWorld();
                     const uint32 ViewportSizeX = View->UnscaledViewRect.Width();
                     const uint32 ViewportSizeY = View->UnscaledViewRect.Height();
 
